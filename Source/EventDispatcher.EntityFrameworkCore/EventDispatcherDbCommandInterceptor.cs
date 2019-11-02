@@ -43,14 +43,15 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
 
         public override async Task<InterceptionResult<int>> NonQueryExecutingAsync(DbCommand command, CommandEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = new CancellationToken())
         {
-            await this.dispatcher.DispatchAsync(GetEvents<IDomainEvent>(eventData.Context), domainEventInvoker, cancellationToken);
+            IList<IDomainEvent> events = GetEvents<IDomainEvent>(eventData.Context).ToList();
+            await this.dispatcher.DispatchAsync(events, domainEventInvoker, cancellationToken);
             InterceptionResult<int> interceptionResult = await base.NonQueryExecutingAsync(command, eventData, result, cancellationToken);
             return interceptionResult;
         }
 
-        private static IEnumerable<TEvent> GetEvents<TEvent>(DbContext context) where TEvent : IEvent
+        private static IEnumerable<TEvent> GetEvents<TEvent>(DbContext context) where TEvent : class, IEvent
         {
-            return Enumerable.Empty<TEvent>();
+            return context.ChangeTracker.Entries<TEvent>().Select(e => e.Entity);
         }
     }
 }
