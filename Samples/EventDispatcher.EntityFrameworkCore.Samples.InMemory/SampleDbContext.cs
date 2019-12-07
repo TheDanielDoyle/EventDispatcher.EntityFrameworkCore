@@ -1,67 +1,62 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EventDispatcher.EntityFrameworkCore.Samples.InMemory
 {
     internal class SampleDbContext : DbContext
     {
-        private IEventDispatcherContext eventDispatcherContext;
-
         public SampleDbContext(DbContextOptions options) : base(options)
         {
         }
 
         public DbSet<User> Users { get; set; }
 
-        public override int SaveChanges()
-        {
-            DispatchDomainEvents();
-            int returnCode = base.SaveChanges();
-            DispatchIntegrationEvents();
-            return returnCode;
-        }
-
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            DispatchDomainEvents();
+            IEventDispatcherContext dispatcherContext = GetEventDispatcherContext();
+            DispatchEvents<IDomainEvent>(dispatcherContext);
             int returnCode = base.SaveChanges(acceptAllChangesOnSuccess);
-            DispatchIntegrationEvents();
+            DispatchEvents<IIntegrationEvent>(dispatcherContext);
+            ClearEvents();
             return returnCode;
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await DispatchDomainEventsAsync(cancellationToken).ConfigureAwait(false);
-            int returnCode = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-            await DispatchIntegrationEventsAsync(cancellationToken).ConfigureAwait(false);
+            IEventDispatcherContext dispatcherContext = GetEventDispatcherContext();
+            await DispatchEventsAsync<IDomainEvent>(dispatcherContext, cancellationToken).ConfigureAwait(false);
+            int returnCode = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken).ConfigureAwait(false);
+            await DispatchEventsAsync<IIntegrationEvent>(dispatcherContext, cancellationToken).ConfigureAwait(false);
+            ClearEvents();
             return returnCode;
         }
 
-        private void DispatchDomainEvents()
+        private void ClearEvents()
         {
-            GetEventDispatcherContext().Dispatch<IDomainEvent>();
+            foreach (EntityEntry<IEventObject> eventObject in this.ChangeTracker.Entries<IEventObject>())
+            {
+                eventObject.Entity.EventStore.ClearEvents();
+                eventObject.State = EntityState.Unchanged;
+            }
         }
 
-        private Task DispatchDomainEventsAsync(CancellationToken cancellationToken = default(CancellationToken))
+        private void DispatchEvents<TEvent>(IEventDispatcherContext dispatcherContext) where TEvent : IEvent
         {
-            return GetEventDispatcherContext().DispatchAsync<IDomainEvent>(cancellationToken);
+            dispatcherContext.Dispatch<TEvent>();
         }
 
-        private void DispatchIntegrationEvents()
+        private Task DispatchEventsAsync<TEvent>(IEventDispatcherContext dispatcherContext, CancellationToken cancellationToken = default(CancellationToken)) where TEvent : IEvent
         {
-            GetEventDispatcherContext().Dispatch<IIntegrationEvent>();
-        }
-
-        private Task DispatchIntegrationEventsAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return GetEventDispatcherContext().DispatchAsync<IIntegrationEvent>(cancellationToken);
+            return dispatcherContext.DispatchAsync<TEvent>(cancellationToken);
         }
 
         private IEventDispatcherContext GetEventDispatcherContext()
         {
-            return eventDispatcherContext ??= new EntityFrameworkEventDispatcherContext(this, this.GetService<IEventDispatcher>());
+            return new EntityFrameworkEventDispatcherContext(this, this.GetService<IEventDispatcher>());
         }
     }
 }

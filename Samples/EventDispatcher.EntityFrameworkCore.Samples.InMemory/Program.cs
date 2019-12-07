@@ -26,6 +26,7 @@ namespace EventDispatcher.EntityFrameworkCore.Samples.InMemory
                 dbContext.Users.Add(user);
                 user.SayHello();
                 user.SayMerryChristmas();
+                user.SayThereIsNoSpoon();
                 Console.WriteLine("Saving User.");
                 await dbContext.SaveChangesAsync();
                 Console.WriteLine("Saving User Completed.");
@@ -46,6 +47,7 @@ namespace EventDispatcher.EntityFrameworkCore.Samples.InMemory
                     services.AddEventHandler<HelloWorldIntegrationEvent, HelloWorldIntegrationEventHandler>();
                     services.AddEventHandler<MerryChristmasDomainEvent, MerryChristmasDomainEventHandler>();
                     services.AddEventHandler<MerryChristmasIntegrationEvent, MerryChristmasIntegrationEventHandler>();
+                    services.AddEventHandler<ThereIsNoSpoonEvent, ThereIsNoSpoonEventHandler>();
                     services.AddDbContext<SampleDbContext>((serviceProvider, options) =>
                     {
                         options.UseInMemoryDatabase("Sample");

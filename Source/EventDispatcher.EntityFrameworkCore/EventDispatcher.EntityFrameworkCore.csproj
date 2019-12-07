@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.1" />
-    <PackageReference Include="TheDanielDoyle.EventDispatcher.Abstractions" Version="1.9.0" />
+    <PackageReference Include="TheDanielDoyle.EventDispatcher" Version="2.0.1" />
   </ItemGroup>
 
 </Project>

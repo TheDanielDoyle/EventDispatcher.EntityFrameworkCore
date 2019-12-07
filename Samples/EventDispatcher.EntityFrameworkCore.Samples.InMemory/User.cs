@@ -26,5 +26,11 @@
                 new MerryChristmasDomainEvent(), 
                 new MerryChristmasIntegrationEvent()
             });
+
+        public void SayThereIsNoSpoon()
+            => EventStore.AddEvents(new IEvent[]
+            {
+                new ThereIsNoSpoonEvent()
+            });
     }
 }
