@@ -40,7 +40,6 @@ namespace EventDispatcher.EntityFrameworkCore.Samples.InMemory
             foreach (EntityEntry<IEventObject> eventObject in this.ChangeTracker.Entries<IEventObject>())
             {
                 eventObject.Entity.EventStore.ClearEvents();
-                eventObject.State = EntityState.Unchanged;
             }
         }
 
