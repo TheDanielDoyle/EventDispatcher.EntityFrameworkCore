@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.1" />
-    <PackageReference Include="TheDanielDoyle.EventDispatcher.Extensions.DependencyInjection" Version="2.0.1" />
+    <PackageReference Include="TheDanielDoyle.EventDispatcher.Extensions.DependencyInjection" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
