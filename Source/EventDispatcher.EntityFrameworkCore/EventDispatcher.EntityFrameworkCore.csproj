@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Authors>Daniel P. Doyle</Authors>
     <Product>Event Dispatcher Entity Framework Core</Product>
     <PackageId>TheDanielDoyle.EventDispatcher.EntityFrameworkCore</PackageId>
     <Description>Entity Framework Core Domain and Integration event dispatch.</Description>
-    <Copyright>© 2022 Daniel P. Doyle</Copyright>
+    <Copyright>© 2024 Daniel P. Doyle</Copyright>
     <PackageProjectUrl>https://github.com/TheDanielDoyle/EventDispatcher.EntityFrameworkCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TheDanielDoyle/EventDispatcher.EntityFrameworkCore</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
-    <PackageReference Include="TheDanielDoyle.EventDispatcher" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
+    <PackageReference Include="TheDanielDoyle.EventDispatcher" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
