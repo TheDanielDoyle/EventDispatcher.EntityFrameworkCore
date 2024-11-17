@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Authors>Daniel P. Doyle</Authors>
     <Product>Event Dispatcher Entity Framework Core</Product>
     <PackageId>TheDanielDoyle.EventDispatcher.EntityFrameworkCore</PackageId>
@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
-    <PackageReference Include="TheDanielDoyle.EventDispatcher" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
+    <PackageReference Include="TheDanielDoyle.EventDispatcher" Version="9.0.0" />
   </ItemGroup>
 
 </Project>
